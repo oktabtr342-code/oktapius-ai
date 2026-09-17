@@ -203,7 +203,7 @@
     
     <div class="chat-box" id="chatBox">
         <div class="message bot-message">
-            <div>Halo! Saya CORE-AI OKTAPIUS yang sudah terhubung dengan server kecerdasan buatan global secara online. 🤖✨<br><br>Sekarang saya bisa menjawab pertanyaan apa pun secara bebas dan pintar. Cobalah ketik sesuatu di bawah ini!</div>
+            <div>Halo! Saya CORE-AI OKTAPIUS yang sudah terhubung dengan server kecerdasan buatan global secara online. 🤖✨<br><br>Sekrawang saya bisa menjawab pertanyaan apa pun secara bebas dan pintar. Cobalah ketik sesuatu di bawah ini!</div>
             <div class="action-container">
                 <button class="copy-btn" onclick="copyText(this)">Salin</button>
             </div>
@@ -222,18 +222,12 @@
 
     async function dapatkanJawabanAI(pertanyaan) {
         try {
-            // Mengatur instruksi agar AI bertingkah laku sebagai CORE-AI OKTAPIUS
             const promptSistem = "Kamu adalah CORE-AI OKTAPIUS, asisten AI buatan Oktapius yang sangat cerdas, ramah, dan membantu. Jawablah pertanyaan ini dengan baik: " + pertanyaan;
-            
-            // Mengambil data jawaban langsung dari server online Pollinations.AI
-            const response = await fetch("https://text.pollinations.ai/" + encodeURIComponent(promptSistem));
-            
+            const response = await fetch("https://pollinations.ai" + encodeURIComponent(promptSistem));
             if (!response.ok) {
                 throw new Error("Gagal mengambil data");
             }
-            
-            const teksJawaban = await response.text();
-            return teksJawaban;
+            return await response.text();
         } catch (error) {
             console.error(error);
             return "Maaf, koneksi ke jaringan Inteligensia Cloud terputus. Silakan coba kirim ulang pesan Anda.";
@@ -244,7 +238,6 @@
         const text = userInput.value.trim();
         if (text === '') return;
 
-        // Tampilkan pesan pengguna di sebelah kanan
         const userDiv = document.createElement('div');
         userDiv.className = 'message user-message';
         userDiv.innerText = text;
@@ -253,20 +246,15 @@
         userInput.value = '';
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Tampilkan animasi tunggu "Memikirkan jawaban..."
         const loadingDiv = document.createElement('div');
         loadingDiv.className = 'message bot-message';
         loadingDiv.innerText = 'Memikirkan jawaban... 🌐';
         chatBox.appendChild(loadingDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Proses mengambil jawaban asli dari server AI
         const jawaban = await dapatkanJawabanAI(text);
-        
-        // Hapus tulisan loading
         chatBox.removeChild(loadingDiv);
 
-        // Tampilkan jawaban AI pintar yang asli
         const botDiv = document.createElement('div');
         botDiv.className = 'message bot-message';
         
@@ -297,3 +285,15 @@
     function clearChat() {
         chatBox.innerHTML = `
             <div class="message bot-message">
+                <div>Riwayat obrolan dibersihkan. Ada yang bisa saya bantu lagi?</div>
+                <div class="action-container">
+                    <button class="copy-btn" onclick="copyText(this)">Salin</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function copyText(button) {
+        const messageText = button.parentElement.parentElement.firstChild.innerText;
+        navigator.clipboard.writeText(messageText).then(() => {
+            button.innerText = 'Tersalin!';
