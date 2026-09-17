@@ -111,13 +111,6 @@
             flex-direction: column;
             gap: 16px;
         }
-        .chat-box::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-box::-webkit-scrollbar-thumb {
-            background: rgba(0, 212, 255, 0.2);
-            border-radius: 3px;
-        }
         .message {
             max-width: 80%;
             padding: 12px 16px;
@@ -153,9 +146,6 @@
             font-size: 11px;
             text-decoration: underline;
         }
-        .copy-btn:hover {
-            color: #ffffff;
-        }
         .input-area {
             padding: 16px;
             background: rgba(7, 12, 20, 0.9);
@@ -174,11 +164,6 @@
             color: white;
             outline: none;
             font-size: 14px;
-            transition: 0.3s;
-        }
-        .input-area input:focus {
-            border-color: #00d4ff;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
         }
         .input-area button {
             background: linear-gradient(135deg, #00d4ff, #0076ff);
@@ -189,12 +174,6 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 14px;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
-        }
-        .input-area button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 212, 255, 0.4);
         }
     </style>
 </head>
@@ -214,7 +193,7 @@
     
     <div class="chat-box" id="chatBox">
         <div class="message bot-message">
-            <div>Halo! Saya sudah diperbarui dengan sistem AI Global tingkat lanjut. 🤖✨<br><br>Sekarang Anda bebas menanyakan apa saja, mulai dari resep makanan, tugas sekolah/kuliah, curhat, hingga trik coding. Ketik pertanyaan Anda di bawah ini!</div>
+            <div>Halo! Saya sudah diperbarui dengan sistem AI Global tingkat lanjut. 🤖✨<br><br>Sekarang Anda bebas menanyakan apa saja. Ketik pertanyaan Anda di bawah ini!</div>
             <div class="action-container">
                 <button class="copy-btn" onclick="copyText(this)">Salin</button>
             </div>
@@ -231,31 +210,25 @@
     const chatBox = document.getElementById('chatBox');
     const userInput = document.getElementById('userInput');
 
-    // Menghubungkan fungsi ke sistem pintar eksternal (Simulasi integrasi Gemini)
-    async function dapatkanJawabanAI(pertanyaan) {
-        try {
-            // Logika dasar pintar bawaan jika offline/tanpa API key eksternal
-            const kataKunci = pertanyaan.toLowerCase();
-            if (kataKunci.includes('napas') || kataKunci.includes('bernapas')) {
-                return "Manusia bernapas menggunakan organ paru-paru. Proses ini melibatkan menghirup oksigen (O2) dan mengeluarkan karbon dioksida (CO2).";
-            } else if (kataKunci.includes('halo') || kataKunci.includes('hai')) {
-                return "Halo! Ada yang bisa saya bantu hari ini?";
-            } else if (kataKunci.includes('siapa kamu') || kataKunci.includes('nama')) {
-                return "Saya adalah CORE-AI OKTAPIUS, asisten AI pintar global yang siap membantu tugas dan pertanyaan Anda!";
-            } else {
-                // Respons fallback jika pertanyaan umum
-                return "Pertanyaan Anda tentang '" + pertanyaan + "' diterima. Sebagai CORE-AI OKTAPIUS, saya menyarankan Anda untuk terus mengeksplorasi topik menarik ini!";
-            }
-        } catch (error) {
-            return "Maaf, sistem sedang sibuk. Silakan coba lagi.";
+    function dapatkanJawabanAI(pertanyaan) {
+        const kataKunci = pertanyaan.toLowerCase();
+        if (kataKunci.includes('napas') || kataKunci.includes('bernapas')) {
+            return "Manusia bernapas menggunakan paru-paru. Proses ini melibatkan penghirupan oksigen (O2) dan pengeluaran karbon dioksida (CO2).";
+        } else if (kataKunci.includes('halo') || kataKunci.includes('hai')) {
+            return "Halo! Ada yang bisa saya bantu hari ini?";
+        } else if (kataKunci.includes('siapa kamu') || kataKunci.includes('nama')) {
+            return "Saya adalah CORE-AI OKTAPIUS, asisten AI pintar global yang siap membantu Anda!";
+        } else if (kataKunci.includes('pohon')) {
+            return "Pohon adalah tumbuhan menahun dengan batang berkayu yang tumbuh memanjang, mendukung cabang dan daun pada sebagian besar spesies.";
+        } else {
+            return "Pertanyaan Anda tentang '" + pertanyaan + "' telah diterima oleh CORE-AI OKTAPIUS. Sistem cerdas kami mendeteksi topik ini sangat menarik untuk dipelajari!";
         }
     }
 
-    async function sendMessage() {
+    function sendMessage() {
         const text = userInput.value.trim();
         if (text === '') return;
 
-        // Tampilkan Pesan User
         const userDiv = document.createElement('div');
         userDiv.className = 'message user-message';
         userDiv.innerText = text;
@@ -264,24 +237,55 @@
         userInput.value = '';
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Tampilkan indikator mengetik sementara
-        const loadingDiv = document.createElement('div');
-        loadingDiv.className = 'message bot-message';
-        loadingDiv.innerText = 'Memikirkan jawaban...';
-        chatBox.appendChild(loadingDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        setTimeout(() => {
+            const jawaban = dapatkanJawabanAI(text);
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-message';
+            
+            const msgContent = document.createElement('div');
+            msgContent.innerText = jawaban;
+            
+            const actionDiv = document.createElement('div');
+            actionDiv.className = 'action-container';
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.innerText = 'Salin';
+            copyBtn.onclick = function() { copyText(copyBtn); };
+            
+            actionDiv.appendChild(copyBtn);
+            botDiv.appendChild(msgContent);
+            botDiv.appendChild(actionDiv);
+            chatBox.appendChild(botDiv);
+            
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 500);
+    }
 
-        // Ambil jawaban pintar
-        const jawaban = await dapatkanJawabanAI(text);
-        
-        // Hapus indikator mengetik dan ganti dengan jawaban asli
-        chatBox.removeChild(loadingDiv);
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
 
-        const botDiv = document.createElement('div');
-        botDiv.className = 'message bot-message';
-        
-        const msgContent = document.createElement('div');
-        msgContent.innerText = jawaban;
-        
-        const actionDiv = document.createElement('div');
-        actionDiv.className = 'action-container';
+    function clearChat() {
+        chatBox.innerHTML = `
+            <div class="message bot-message">
+                <div>Riwayat obrolan dibersihkan. Ada yang bisa saya bantu lagi?</div>
+                <div class="action-container">
+                    <button class="copy-btn" onclick="copyText(this)">Salin</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function copyText(button) {
+        const messageText = button.parentElement.parentElement.firstChild.innerText;
+        navigator.clipboard.writeText(messageText).then(() => {
+            button.innerText = 'Tersalin!';
+            setTimeout(() => { button.innerText = 'Salin'; }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
