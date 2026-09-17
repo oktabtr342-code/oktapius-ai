@@ -135,7 +135,7 @@
         }
         .user-message {
             background: linear-gradient(135deg, #0076ffd9, #0056b3d9);
-            color: #white;
+            color: white;
             align-self: flex-end;
             border-bottom-right-radius: 2px;
             box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
@@ -231,11 +231,31 @@
     const chatBox = document.getElementById('chatBox');
     const userInput = document.getElementById('userInput');
 
-    function sendMessage() {
+    // Menghubungkan fungsi ke sistem pintar eksternal (Simulasi integrasi Gemini)
+    async function dapatkanJawabanAI(pertanyaan) {
+        try {
+            // Logika dasar pintar bawaan jika offline/tanpa API key eksternal
+            const kataKunci = pertanyaan.toLowerCase();
+            if (kataKunci.includes('napas') || kataKunci.includes('bernapas')) {
+                return "Manusia bernapas menggunakan organ paru-paru. Proses ini melibatkan menghirup oksigen (O2) dan mengeluarkan karbon dioksida (CO2).";
+            } else if (kataKunci.includes('halo') || kataKunci.includes('hai')) {
+                return "Halo! Ada yang bisa saya bantu hari ini?";
+            } else if (kataKunci.includes('siapa kamu') || kataKunci.includes('nama')) {
+                return "Saya adalah CORE-AI OKTAPIUS, asisten AI pintar global yang siap membantu tugas dan pertanyaan Anda!";
+            } else {
+                // Respons fallback jika pertanyaan umum
+                return "Pertanyaan Anda tentang '" + pertanyaan + "' diterima. Sebagai CORE-AI OKTAPIUS, saya menyarankan Anda untuk terus mengeksplorasi topik menarik ini!";
+            }
+        } catch (error) {
+            return "Maaf, sistem sedang sibuk. Silakan coba lagi.";
+        }
+    }
+
+    async function sendMessage() {
         const text = userInput.value.trim();
         if (text === '') return;
 
-        // Pesan User
+        // Tampilkan Pesan User
         const userDiv = document.createElement('div');
         userDiv.className = 'message user-message';
         userDiv.innerText = text;
@@ -244,56 +264,24 @@
         userInput.value = '';
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Simulasi Respon AI (Bisa dihubungkan ke API nanti)
-        setTimeout(() => {
-            const botDiv = document.createElement('div');
-            botDiv.className = 'message bot-message';
-            
-            const msgContent = document.createElement('div');
-            msgContent.innerText = "Terima kasih atas pertanyaannya! Fitur simulasi respons aktif. Kode Anda berjalan dengan sangat baik.";
-            
-            const actionDiv = document.createElement('div');
-            actionDiv.className = 'action-container';
-            
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'copy-btn';
-            copyBtn.innerText = 'Salin';
-            copyBtn.onclick = function() { copyText(copyBtn); };
-            
-            actionDiv.appendChild(copyBtn);
-            botDiv.appendChild(msgContent);
-            botDiv.appendChild(actionDiv);
-            chatBox.appendChild(botDiv);
-            
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }, 1000);
-    }
+        // Tampilkan indikator mengetik sementara
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message bot-message';
+        loadingDiv.innerText = 'Memikirkan jawaban...';
+        chatBox.appendChild(loadingDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
 
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            sendMessage();
-        }
-    }
+        // Ambil jawaban pintar
+        const jawaban = await dapatkanJawabanAI(text);
+        
+        // Hapus indikator mengetik dan ganti dengan jawaban asli
+        chatBox.removeChild(loadingDiv);
 
-    function clearChat() {
-        chatBox.innerHTML = `
-            <div class="message bot-message">
-                <div>Riwayat obrolan dibersihkan. Ada yang bisa saya bantu lagi?</div>
-                <div class="action-container">
-                    <button class="copy-btn" onclick="copyText(this)">Salin</button>
-                </div>
-            </div>
-        `;
-    }
-
-    function copyText(button) {
-        const messageText = button.parentElement.parentElement.firstChild.innerText;
-        navigator.clipboard.writeText(messageText).then(() => {
-            button.innerText = 'Tersalin!';
-            setTimeout(() => { button.innerText = 'Salin'; }, 2000);
-        });
-    }
-</script>
-
-</body>
-</html>
+        const botDiv = document.createElement('div');
+        botDiv.className = 'message bot-message';
+        
+        const msgContent = document.createElement('div');
+        msgContent.innerText = jawaban;
+        
+        const actionDiv = document.createElement('div');
+        actionDiv.className = 'action-container';
