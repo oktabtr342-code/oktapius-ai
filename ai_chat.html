@@ -3,296 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CORE-AI OKTAPIUS</title>
+    <title>Oktapius AI</title>
+
     <style>
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         body {
-            background: radial-gradient(circle at center, #101f30 0%, #070c14 100%);
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
             height: 100vh;
-            overflow: hidden;
-        }
-        .chat-container {
-            width: 100%;
-            max-width: 600px;
-            height: 90vh;
-            background: rgba(15, 28, 46, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 16px;
+            margin: auto;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            margin: 20px;
         }
-        .chat-header {
-            padding: 16px;
-            background: rgba(7, 12, 20, 0.9);
-            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #00d4ff, #0056b3);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 18px;
-            border: 2px solid #00d4ff;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-        }
-        .status-info h2 {
-            font-size: 16px;
-            color: #00d4ff;
-            letter-spacing: 0.5px;
-        }
-        .status-online {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: #a0aec0;
-            margin-top: 2px;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            background-color: #39ff14;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 8px #39ff14;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.6; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.6; }
-        }
-        .header-btn {
-            background: transparent;
-            border: 1px solid rgba(255, 75, 75, 0.4);
-            color: #ff4b4b;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-        .header-btn:hover {
-            background: #ff4b4b;
-            color: white;
-            box-shadow: 0 0 10px rgba(255, 75, 75, 0.4);
-        }
-        .chat-box {
-            flex: 1;
+
+        .header {
             padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
         }
-        .chat-box::-webkit-scrollbar {
-            width: 6px;
+
+        .header h1 {
+            margin: 0;
+            font-size: 25px;
         }
-        .chat-box::-webkit-scrollbar-thumb {
-            background: rgba(0, 212, 255, 0.2);
-            border-radius: 3px;
+
+        .status {
+            margin-top: 6px;
+            color: #4ade80;
+            font-size: 13px;
         }
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 14px;
-            line-height: 1.5;
-            font-size: 14px;
-            position: relative;
-        }
-        .bot-message {
-            background: rgba(26, 42, 64, 0.8);
-            color: #ffffff;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .user-message {
-            background: linear-gradient(135deg, #0076ffd9, #0056b3d9);
-            color: #white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-        }
-        .action-container {
-            margin-top: 8px;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .copy-btn {
-            background: transparent;
-            border: none;
-            color: #00d4ff;
-            cursor: pointer;
-            font-size: 11px;
-            text-decoration: underline;
-        }
-        .copy-btn:hover {
-            color: #ffffff;
-        }
-        .input-area {
-            padding: 16px;
-            background: rgba(7, 12, 20, 0.9);
-            border-top: 1px solid rgba(0, 212, 255, 0.2);
-            border-bottom-left-radius: 16px;
-            border-bottom-right-radius: 16px;
-            display: flex;
-            gap: 12px;
-        }
-        .input-area input {
+
+        #chatBox {
             flex: 1;
-            padding: 12px;
-            background: #101c2e;
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 8px;
-            color: white;
-            outline: none;
-            font-size: 14px;
-            transition: 0.3s;
+            overflow-y: auto;
+            padding: 20px;
         }
-        .input-area input:focus {
-            border-color: #00d4ff;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+
+        .welcome {
+            text-align: center;
+            color: #cbd5e1;
+            margin-top: 50px;
         }
-        .input-area button {
-            background: linear-gradient(135deg, #00d4ff, #0076ff);
-            color: white;
+
+        .message {
+            max-width: 75%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 15px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .user {
+            margin-left: auto;
+            background: #2563eb;
+        }
+
+        .ai {
+            margin-right: auto;
+            background: #334155;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: #1e293b;
+            border-top: 1px solid #334155;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 14px;
             border: none;
-            padding: 0 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+            outline: none;
+            border-radius: 12px;
+            font-size: 16px;
         }
-        .input-area button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 212, 255, 0.4);
+
+        #sendButton {
+            padding: 0 22px;
+            border: none;
+            border-radius: 12px;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #sendButton:hover {
+            background: #1d4ed8;
+        }
+
+        #sendButton:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 600px) {
+            .message {
+                max-width: 90%;
+            }
+
+            #sendButton {
+                padding: 0 15px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">
-        <div class="profile-section">
-            <div class="avatar">O</div>
-            <div class="status-info">
-                <h2>CORE-AI OKTAPIUS</h2>
-                <div class="status-online"><span class="dot"></span>Terhubung ke Inteligensia Cloud Global</div>
-            </div>
-        </div>
-        <button class="header-btn" onclick="clearChat()">Hapus Chat</button>
+<div class="container">
+
+    <div class="header">
+        <h1>🤖 Oktapius AI</h1>
+        <div class="status">● Online</div>
     </div>
-    
-    <div class="chat-box" id="chatBox">
-        <div class="message bot-message">
-            <div>Halo! Saya sudah diperbarui dengan sistem AI Global tingkat lanjut. 🤖✨<br><br>Sekarang Anda bebas menanyakan apa saja, mulai dari resep makanan, tugas sekolah/kuliah, curhat, hingga trik coding. Ketik pertanyaan Anda di bawah ini!</div>
-            <div class="action-container">
-                <button class="copy-btn" onclick="copyText(this)">Salin</button>
-            </div>
+
+    <div id="chatBox">
+
+        <div class="welcome">
+            <h2>Selamat Datang di Oktapius AI</h2>
+            <p>Tanyakan apa saja kepada saya.</p>
         </div>
+
     </div>
-    
+
     <div class="input-area">
-        <input type="text" id="userInput" placeholder="Tanyakan apa saja secara bebas di sini..." onkeypress="handleKeyPress(event)">
-        <button onclick="sendMessage()">KIRIM</button>
+
+        <input
+            type="text"
+            id="userInput"
+            placeholder="Tulis pertanyaan..."
+            autocomplete="off"
+        >
+
+        <button id="sendButton" onclick="kirimPesan()">
+            Kirim
+        </button>
+
     </div>
+
 </div>
 
+
 <script>
-    const chatBox = document.getElementById('chatBox');
-    const userInput = document.getElementById('userInput');
 
-    function sendMessage() {
-        const text = userInput.value.trim();
-        if (text === '') return;
+const input = document.getElementById("userInput");
+const chatBox = document.getElementById("chatBox");
+const tombol = document.getElementById("sendButton");
 
-        // Pesan User
-        const userDiv = document.createElement('div');
-        userDiv.className = 'message user-message';
-        userDiv.innerText = text;
-        chatBox.appendChild(userDiv);
 
-        userInput.value = '';
-        chatBox.scrollTop = chatBox.scrollHeight;
+function tampilkanPesan(teks, kelas) {
 
-        // Simulasi Respon AI (Bisa dihubungkan ke API nanti)
-        setTimeout(() => {
-            const botDiv = document.createElement('div');
-            botDiv.className = 'message bot-message';
-            
-            const msgContent = document.createElement('div');
-            msgContent.innerText = "Terima kasih atas pertanyaannya! Fitur simulasi respons aktif. Kode Anda berjalan dengan sangat baik.";
-            
-            const actionDiv = document.createElement('div');
-            actionDiv.className = 'action-container';
-            
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'copy-btn';
-            copyBtn.innerText = 'Salin';
-            copyBtn.onclick = function() { copyText(copyBtn); };
-            
-            actionDiv.appendChild(copyBtn);
-            botDiv.appendChild(msgContent);
-            botDiv.appendChild(actionDiv);
-            chatBox.appendChild(botDiv);
-            
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }, 1000);
+    const pesan = document.createElement("div");
+
+    pesan.className = "message " + kelas;
+
+    pesan.textContent = teks;
+
+    chatBox.appendChild(pesan);
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    return pesan;
+}
+
+
+async function kirimPesan() {
+
+    const pertanyaan = input.value.trim();
+
+    // Jangan kirim kalau kosong
+    if (pertanyaan === "") {
+        return;
     }
 
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            sendMessage();
+    // Tampilkan pertanyaan user
+    tampilkanPesan(pertanyaan, "user");
+
+    // Kosongkan input
+    input.value = "";
+
+    // Matikan tombol sementara
+    tombol.disabled = true;
+    tombol.textContent = "Menjawab...";
+
+    // Tampilkan loading
+    const loading = tampilkanPesan(
+        "Oktapius sedang berpikir...",
+        "ai"
+    );
+
+
+    try {
+
+        const prompt =
+            "Kamu adalah Oktapius AI, asisten AI yang ramah, " +
+            "cerdas dan membantu. Jawablah dalam Bahasa Indonesia. " +
+            "Pertanyaan pengguna: " +
+            pertanyaan;
+
+
+        const url =
+            "https://text.pollinations.ai/" +
+            encodeURIComponent(prompt);
+
+
+        const response = await fetch(url);
+
+
+        if (!response.ok) {
+            throw new Error(
+                "Server AI error: " + response.status
+            );
         }
+
+
+        const jawaban = await response.text();
+
+
+        // Hapus loading
+        loading.remove();
+
+
+        // Tampilkan jawaban AI
+        if (jawaban.trim() !== "") {
+
+            tampilkanPesan(
+                jawaban,
+                "ai"
+            );
+
+        } else {
+
+            tampilkanPesan(
+                "Oktapius tidak menerima jawaban dari server.",
+                "ai"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        loading.remove();
+
+        tampilkanPesan(
+            "Gagal terhubung ke AI. Periksa koneksi internet lalu coba lagi.",
+            "ai"
+        );
+
     }
 
-    function clearChat() {
-        chatBox.innerHTML = `
-            <div class="message bot-message">
-                <div>Riwayat obrolan dibersihkan. Ada yang bisa saya bantu lagi?</div>
-                <div class="action-container">
-                    <button class="copy-btn" onclick="copyText(this)">Salin</button>
-                </div>
-            </div>
-        `;
+
+    // Aktifkan tombol kembali
+    tombol.disabled = false;
+    tombol.textContent = "Kirim";
+
+    input.focus();
+}
+
+
+// Bisa kirim menggunakan tombol ENTER
+input.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        kirimPesan();
+
     }
 
-    function copyText(button) {
-        const messageText = button.parentElement.parentElement.firstChild.innerText;
-        navigator.clipboard.writeText(messageText).then(() => {
-            button.innerText = 'Tersalin!';
-            setTimeout(() => { button.innerText = 'Salin'; }, 2000);
-        });
-    }
+});
+
 </script>
 
 </body>
