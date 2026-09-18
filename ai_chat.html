@@ -1,293 +1,678 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oktapius AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>Oktapius AI</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: white;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        .container {
-            max-width: 900px;
-            height: 100vh;
-            margin: auto;
-            display: flex;
-            flex-direction: column;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #020b20, #071d42, #07102c);
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+}
 
-        .header {
-            padding: 20px;
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
-        }
+.app {
+    display: flex;
+    height: 100vh;
+}
 
-        .header h1 {
-            margin: 0;
-            font-size: 25px;
-        }
+/* SIDEBAR */
+.sidebar {
+    width: 250px;
+    background: rgba(3, 15, 38, 0.95);
+    border-right: 1px solid #1c4c8c;
+    padding: 25px 15px;
+}
 
-        .status {
-            margin-top: 6px;
-            color: #4ade80;
-            font-size: 13px;
-        }
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    margin-bottom: 30px;
+}
 
-        #chatBox {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #0b2d63;
+    border: 2px solid #168cff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+}
 
-        .welcome {
-            text-align: center;
-            color: #cbd5e1;
-            margin-top: 50px;
-        }
+.logo h1 {
+    font-size: 20px;
+    margin: 0;
+}
 
-        .message {
-            max-width: 75%;
-            padding: 12px 15px;
-            margin: 10px 0;
-            border-radius: 15px;
-            line-height: 1.5;
-            white-space: pre-wrap;
-        }
+.status {
+    color: #36ed82;
+    font-size: 12px;
+    margin-top: 5px;
+}
 
-        .user {
-            margin-left: auto;
-            background: #2563eb;
-        }
+.menu button {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: #b9c9e7;
+    text-align: left;
+    font-size: 15px;
+    cursor: pointer;
+}
 
-        .ai {
-            margin-right: auto;
-            background: #334155;
-        }
+.menu button:hover,
+.menu .active {
+    background: linear-gradient(90deg, #1265d5, #174c9c);
+    color: white;
+}
 
-        .input-area {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-            background: #1e293b;
-            border-top: 1px solid #334155;
-        }
+.bottom {
+    position: absolute;
+    bottom: 25px;
+    color: #7895bd;
+    font-size: 13px;
+}
 
-        #userInput {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            outline: none;
-            border-radius: 12px;
-            font-size: 16px;
-        }
+/* MAIN */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-        #sendButton {
-            padding: 0 22px;
-            border: none;
-            border-radius: 12px;
-            background: #2563eb;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
+/* TOP BAR */
+.topbar {
+    height: 70px;
+    border-bottom: 1px solid #173b6c;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 30px;
+}
 
-        #sendButton:hover {
-            background: #1d4ed8;
-        }
+.profile {
+    background: #102b55;
+    border: 1px solid #25558f;
+    padding: 10px 18px;
+    border-radius: 25px;
+}
 
-        #sendButton:disabled {
-            background: #64748b;
-            cursor: not-allowed;
-        }
+/* CHAT */
+#chatBox {
+    flex: 1;
+    overflow-y: auto;
+    padding: 25px;
+}
 
-        @media (max-width: 600px) {
-            .message {
-                max-width: 90%;
-            }
+.welcome {
+    max-width: 900px;
+    margin: 30px auto;
+    text-align: center;
+}
 
-            #sendButton {
-                padding: 0 15px;
-            }
-        }
-    </style>
+.robot {
+    width: 120px;
+    height: 120px;
+    margin: auto;
+    border-radius: 50%;
+    background: radial-gradient(circle, #174b99, #06152f);
+    border: 2px solid #198cff;
+    box-shadow: 0 0 35px rgba(0, 140, 255, .4);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 60px;
+}
+
+.welcome h2 {
+    font-size: 36px;
+    margin: 20px 0 10px;
+}
+
+.gradient {
+    background: linear-gradient(90deg, #00d9ff, #3987ff, #9b6cff);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.welcome p {
+    color: #b5c9e8;
+    font-size: 16px;
+}
+
+/* CARD */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 35px;
+}
+
+.card {
+    padding: 20px 12px;
+    border-radius: 15px;
+    background: rgba(12, 35, 73, .8);
+    border: 1px solid #214d8c;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.card:hover {
+    border-color: #1b91ff;
+    transform: translateY(-3px);
+}
+
+.card-icon {
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.card b {
+    font-size: 13px;
+}
+
+/* MESSAGE */
+.message {
+    max-width: 800px;
+    margin: 12px auto;
+    padding: 14px 18px;
+    border-radius: 16px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.user-message {
+    background: linear-gradient(135deg, #1265d5, #2387ef);
+}
+
+.ai-message {
+    background: #102b55;
+    border: 1px solid #24518d;
+}
+
+/* INPUT */
+.input-area {
+    padding: 10px 30px;
+}
+
+.input-box {
+    max-width: 1000px;
+    margin: auto;
+    display: flex;
+    gap: 8px;
+    padding: 7px;
+
+    background: #0b2146;
+    border: 2px solid #168cff;
+    border-radius: 20px;
+}
+
+#userInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 15px;
+    padding: 13px;
+}
+
+#userInput::placeholder {
+    color: #7895bd;
+}
+
+#sendButton {
+    border: none;
+    border-radius: 14px;
+    padding: 0 25px;
+    background: linear-gradient(135deg, #168cff, #386dff);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#sendButton:hover {
+    filter: brightness(1.15);
+}
+
+#sendButton:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.footer {
+    text-align: center;
+    font-size: 11px;
+    color: #708db8;
+    padding: 8px;
+}
+
+/* HP */
+@media(max-width: 700px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .cards {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .welcome h2 {
+        font-size: 28px;
+    }
+
+    .input-area {
+        padding: 8px;
+    }
+
+    #sendButton {
+        padding: 0 15px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-    <div class="header">
-        <h1>🤖 Oktapius AI</h1>
-        <div class="status">● Online</div>
-    </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-    <div id="chatBox">
+        <div class="logo">
 
-        <div class="welcome">
-            <h2>Selamat Datang di Oktapius AI</h2>
-            <p>Tanyakan apa saja kepada saya.</p>
+            <div class="logo-icon">
+                🤖
+            </div>
+
+            <div>
+                <h1>Oktapius AI</h1>
+
+                <div class="status">
+                    ● Online
+                </div>
+            </div>
+
         </div>
 
-    </div>
+        <div class="menu">
 
-    <div class="input-area">
+            <button class="active" onclick="focusInput()">
+                💬 &nbsp; Chat
+            </button>
 
-        <input
-            type="text"
-            id="userInput"
-            placeholder="Tulis pertanyaan..."
-            autocomplete="off"
-        >
+            <button onclick="tentang()">
+                🕘 &nbsp; Riwayat
+            </button>
 
-        <button id="sendButton" onclick="kirimPesan()">
-            Kirim
-        </button>
+            <button onclick="tentang()">
+                ℹ️ &nbsp; Tentang
+            </button>
 
-    </div>
+            <button onclick="tentang()">
+                ⚙️ &nbsp; Pengaturan
+            </button>
+
+        </div>
+
+        <div class="bottom">
+            ✦ Oktapius AI<br>
+            Selalu siap membantu Anda.
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="profile">
+                🤖 &nbsp; Oktapius AI
+            </div>
+
+        </div>
+
+
+        <!-- CHAT -->
+        <div id="chatBox">
+
+            <div class="welcome" id="welcome">
+
+                <div class="robot">
+                    🤖
+                </div>
+
+                <h2>
+                    Selamat Datang di
+                    <br>
+                    <span class="gradient">
+                        Oktapius AI
+                    </span>
+                </h2>
+
+                <p>
+                    Tanyakan apa saja kepada saya.
+                    <br>
+                    Saya siap membantu Anda.
+                </p>
+
+
+                <div class="cards">
+
+                    <div class="card"
+                    onclick="gunakanPrompt('Jelaskan suatu konsep dengan mudah')">
+
+                        <div class="card-icon">
+                            ⚡
+                        </div>
+
+                        <b>
+                            Jelaskan<br>
+                            suatu konsep
+                        </b>
+
+                    </div>
+
+
+                    <div class="card"
+                    onclick="gunakanPrompt('Bantu saya membuat kode program')">
+
+                        <div class="card-icon">
+                            💻
+                        </div>
+
+                        <b>
+                            Bantu membuat<br>
+                            kode
+                        </b>
+
+                    </div>
+
+
+                    <div class="card"
+                    onclick="gunakanPrompt('Jelaskan tentang teknologi')">
+
+                        <div class="card-icon">
+                            💡
+                        </div>
+
+                        <b>
+                            Informasi<br>
+                            teknologi
+                        </b>
+
+                    </div>
+
+
+                    <div class="card"
+                    onclick="gunakanPrompt('Jawab pertanyaan saya')">
+
+                        <div class="card-icon">
+                            💬
+                        </div>
+
+                        <b>
+                            Pertanyaan<br>
+                            umum
+                        </b>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INPUT -->
+        <div class="input-area">
+
+            <div class="input-box">
+
+                <input
+                    id="userInput"
+                    type="text"
+                    placeholder="Tulis pertanyaan..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="sendButton"
+                    type="button"
+                    onclick="kirimPesan()"
+                >
+                    ➤ &nbsp; Kirim
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="footer">
+            🛡 Oktapius AI • Aman • Cepat • Akurat
+        </div>
+
+    </main>
 
 </div>
 
 
 <script>
 
-const input = document.getElementById("userInput");
+/* ELEMENT */
+const userInput = document.getElementById("userInput");
 const chatBox = document.getElementById("chatBox");
-const tombol = document.getElementById("sendButton");
+const sendButton = document.getElementById("sendButton");
 
 
-function tampilkanPesan(teks, kelas) {
-
-    const pesan = document.createElement("div");
-
-    pesan.className = "message " + kelas;
-
-    pesan.textContent = teks;
-
-    chatBox.appendChild(pesan);
-
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    return pesan;
+/* FOCUS */
+function focusInput() {
+    userInput.focus();
 }
 
 
+/* PROMPT DARI CARD */
+function gunakanPrompt(text) {
+
+    userInput.value = text;
+    userInput.focus();
+
+}
+
+
+/* TENTANG */
+function tentang() {
+
+    tampilkanPesan(
+        "Oktapius AI adalah asisten AI yang siap membantu menjawab pertanyaan Anda.",
+        "ai-message"
+    );
+
+}
+
+
+/* TAMPILKAN PESAN */
+function tampilkanPesan(text, className) {
+
+    const div = document.createElement("div");
+
+    div.className = "message " + className;
+
+    div.textContent = text;
+
+    chatBox.appendChild(div);
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    return div;
+}
+
+
+/* KIRIM PESAN */
 async function kirimPesan() {
 
-    const pertanyaan = input.value.trim();
+    const pertanyaan = userInput.value.trim();
 
-    // Jangan kirim kalau kosong
     if (pertanyaan === "") {
+
+        userInput.focus();
+
         return;
     }
 
-    // Tampilkan pertanyaan user
-    tampilkanPesan(pertanyaan, "user");
 
-    // Kosongkan input
-    input.value = "";
+    /* HAPUS WELCOME */
+    const welcome = document.getElementById("welcome");
 
-    // Matikan tombol sementara
-    tombol.disabled = true;
-    tombol.textContent = "Menjawab...";
+    if (welcome) {
+        welcome.remove();
+    }
 
-    // Tampilkan loading
+
+    /* PESAN USER */
+    tampilkanPesan(
+        pertanyaan,
+        "user-message"
+    );
+
+
+    /* KOSONGKAN INPUT */
+    userInput.value = "";
+
+
+    /* DISABLE TOMBOL */
+    sendButton.disabled = true;
+
+    sendButton.textContent = "Menjawab...";
+
+
+    /* LOADING */
     const loading = tampilkanPesan(
-        "Oktapius sedang berpikir...",
-        "ai"
+        "🤖 Oktapius sedang berpikir...",
+        "ai-message"
     );
 
 
     try {
 
         const prompt =
-            "Kamu adalah Oktapius AI, asisten AI yang ramah, " +
-            "cerdas dan membantu. Jawablah dalam Bahasa Indonesia. " +
-            "Pertanyaan pengguna: " +
+            "Kamu adalah Oktapius AI. " +
+            "Jawab pertanyaan pengguna dengan jelas, " +
+            "ramah dan menggunakan Bahasa Indonesia. " +
+            "Pertanyaan: " +
             pertanyaan;
 
 
-        const url =
+        /* HUBUNGKAN KE AI */
+        const response = await fetch(
             "https://text.pollinations.ai/" +
-            encodeURIComponent(prompt);
-
-
-        const response = await fetch(url);
+            encodeURIComponent(prompt)
+        );
 
 
         if (!response.ok) {
+
             throw new Error(
-                "Server AI error: " + response.status
+                "Server AI error: " +
+                response.status
             );
+
         }
 
 
+        /* AMBIL JAWABAN */
         const jawaban = await response.text();
 
 
-        // Hapus loading
+        /* HAPUS LOADING */
         loading.remove();
 
 
-        // Tampilkan jawaban AI
+        /* TAMPILKAN AI */
         if (jawaban.trim() !== "") {
 
             tampilkanPesan(
-                jawaban,
-                "ai"
+                jawaban.trim(),
+                "ai-message"
             );
 
         } else {
 
             tampilkanPesan(
-                "Oktapius tidak menerima jawaban dari server.",
-                "ai"
+                "Maaf, AI tidak memberikan jawaban.",
+                "ai-message"
             );
 
         }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(error);
 
         loading.remove();
 
         tampilkanPesan(
-            "Gagal terhubung ke AI. Periksa koneksi internet lalu coba lagi.",
-            "ai"
+            "❌ Gagal terhubung ke server AI. Pastikan internet aktif lalu coba lagi.",
+            "ai-message"
         );
 
     }
 
 
-    // Aktifkan tombol kembali
-    tombol.disabled = false;
-    tombol.textContent = "Kirim";
+    finally {
 
-    input.focus();
-}
+        sendButton.disabled = false;
 
+        sendButton.textContent = "➤  Kirim";
 
-// Bisa kirim menggunakan tombol ENTER
-input.addEventListener("keydown", function(event) {
-
-    if (event.key === "Enter") {
-
-        event.preventDefault();
-
-        kirimPesan();
+        userInput.focus();
 
     }
 
-});
+}
+
+
+/* ENTER UNTUK KIRIM */
+userInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            kirimPesan();
+
+        }
+
+    }
+);
 
 </script>
 
