@@ -117,10 +117,9 @@
     const btnKirim = document.getElementById('btnKirim');
     const chatMessages = document.getElementById('chatMessages');
 
-    // 1. MASUKKAN API KEY GEMINI ANDA DI SINI
-    const GEMINI_API_KEY = "MASUKKAN_API_KEY_ANDA_DI_SINI"; 
+    // 1. GANTI TULISAN DI BAWAH INI DENGAN API KEY YANG ANDA SALIN TADI
+    const GEMINI_API_KEY = "PASTE_API_KEY_ANDA_DI_SINI"; 
 
-    // 2. Fungsi Utama Kirim Pesan ke AI
     async function kirimPesan() {
         const text = userInput.value.trim();
         if (text === "") return;
@@ -154,9 +153,11 @@
             const data = await response.json();
             
             // Hapus tulisan "Sedang mengetik..." setelah respons diterima
-            chatMessages.removeChild(loadingDiv);
+            if (chatMessages.contains(loadingDiv)) {
+                chatMessages.removeChild(loadingDiv);
+            }
 
-            // Ambil teks jawaban dari data JSON Gemini
+            // Ambil teks jawaban dari struktur data JSON Gemini yang benar
             const aiJawaban = data.candidates[0].content.parts[0].text;
             
             // Tampilkan jawaban asli dari AI ke layar chat
@@ -180,10 +181,10 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // 3. Pasang Event Listener agar tombol bisa diklik
+    // Pasang Event Listener agar tombol bisa diklik
     btnKirim.addEventListener('click', kirimPesan);
 
-    // 4. Pasang Event Listener agar bisa kirim lewat tombol Enter keyboard
+    // Pasang Event Listener agar bisa kirim lewat tombol Enter keyboard
     userInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             kirimPesan();
